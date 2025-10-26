@@ -309,5 +309,6 @@ if st.button("🚀 Run Processing"):
 
     except Exception as e:
         st.error(f"❌ Processing failed: {e}")
-        st.exception(e))
+        st.exception(e)
+
 
