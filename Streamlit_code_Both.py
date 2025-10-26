@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -- coding: utf-8 --
 """
 Created on Sun Oct 26 00:44:04 2025
 
@@ -93,13 +93,19 @@ def add_bg_from_local(image_file):
             display: inline-block;
         }}
 
-        /* --- Perfectly Centered Radio Buttons --- */
+        /* --- Force Center Radio Buttons --- */
         div[data-testid="stHorizontalBlock"] {{
             display: flex !important;
             justify-content: center !important;
             align-items: center !important;
+            width: 100% !important;
+        }}
+
+        div[data-testid="stVerticalBlock"] {{
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
             text-align: center !important;
-            margin: 0 auto !important;
             width: 100% !important;
         }}
 
@@ -109,6 +115,16 @@ def add_bg_from_local(image_file):
             color: #000 !important;
             text-shadow: 1px 1px 3px rgba(255,255,255,0.5);
         }}
+
+        /* --- Align all sections center --- */
+        [data-testid="stBlock"] {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }}
         </style>
         """,
         unsafe_allow_html=True
@@ -117,7 +133,7 @@ def add_bg_from_local(image_file):
 # ---- Add the Background ----
 add_bg_from_local("Snap6.png")
 
-# ---- App Header (White Title) ----
+# ---- App Header ----
 st.markdown(
     '<h1 style="color:white; text-align:center; font-weight:900; text-shadow:1px 1px 3px rgba(0,0,0,0.6);">📊 Network KPI Weekly Slides Generator</h1>',
     unsafe_allow_html=True
@@ -132,8 +148,9 @@ st.markdown(
 # ---- Centered Select Report Type ----
 st.markdown('<p class="subtitle" style="font-weight:700;">Select Report Type:</p>', unsafe_allow_html=True)
 
-center_container = st.container()
-with center_container:
+# --- Make Radio Perfectly Centered ---
+centered_radio = st.columns([1, 2, 1])[1]
+with centered_radio:
     report_type = st.radio(
         "",
         ["UE & SI", "DE"],
@@ -176,12 +193,11 @@ if report_type == "UE & SI":
                     st.exception(e)
 
 # ============================================================
-# ---- DE SECTION (4 Input Files + Side-by-Side Layout) ----
+# ---- DE SECTION ----
 # ============================================================
 else:
     st.header("📁 DE Input Files")
 
-    # --- Side-by-side uploaders for Delta and Port Said ---
     col1, col2 = st.columns(2)
     with col1:
         excel_file_2G_3G_4G_Delta = st.file_uploader(
@@ -192,15 +208,12 @@ else:
             "🏗️ Upload 2G / 3G / 4G Port Said Excel file (.xlsx)", type=["xlsx"], key="ports"
         )
 
-    # --- Below those, single uploaders for 5G + PPT ---
     excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"], key="5g")
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"], key="ppt")
 
-    # --- Warning message if any missing ---
     if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
         st.markdown('<p class="upload-info">⚠️ Please upload all required files (2G/3G/4G Delta, Port Said, 5G, and PPT) to continue.</p>', unsafe_allow_html=True)
     else:
-        # --- Save all uploaded files temporarily ---
         temp_dir = tempfile.mkdtemp()
         excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
         excel_path_2G_3G_4G_Ports = os.path.join(temp_dir, excel_file_2G_3G_4G_Ports.name)
@@ -216,7 +229,6 @@ else:
             with open(path, "wb") as f:
                 f.write(file_obj.read())
 
-        # --- Run button ---
         if st.button("🚀 Run Processing"):
             with st.spinner("Processing DE Report — please wait..."):
                 try:
