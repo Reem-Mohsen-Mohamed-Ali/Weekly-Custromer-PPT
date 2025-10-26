@@ -30,7 +30,7 @@ def add_bg_from_local(image_file):
             background-attachment: fixed;
         }}
 
-        /* Center page content */
+        /* Center main content */
         .main {{
             display: flex;
             flex-direction: column;
@@ -43,23 +43,39 @@ def add_bg_from_local(image_file):
         h1 {{
             text-align: center;
             font-weight: 900;
-            color: white;
+            color: #ffffff;
             margin-bottom: 0.5rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
         }}
 
         /* Subtitle */
         .subtitle {{
             text-align: center;
             font-size: 1.15rem;
-            color: black;
+            color: #f1f1f1;
             margin-bottom: 1rem;
             font-weight: 600;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
+        }}
+
+        /* Centered Radio */
+        div[data-testid="stHorizontalBlock"] {{
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            width: 100% !important;
+        }}
+        label[data-baseweb="radio"] > div {{
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
+            color: #ffffff !important;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.7);
         }}
 
         /* Buttons */
         div.stButton > button:first-child {{
-            background-color: #005bb5;
+            background-color: #007bff;
             color: white;
             font-size: 18px;
             border-radius: 12px;
@@ -71,42 +87,28 @@ def add_bg_from_local(image_file):
             transition: all 0.3s ease;
         }}
         div.stButton > button:first-child:hover {{
-            background-color: #0073e6;
-            transform: scale(1.03);
+            background-color: #0094ff;
+            transform: scale(1.04);
         }}
 
-        /* File uploaders */
+        /* Upload sections */
         section[data-testid="stFileUploader"] {{
             text-align: center;
         }}
 
-        /* Info text */
+        /* Info Text */
         .upload-info {{
             color: #fff;
             font-weight: bold;
             font-size: 1.1rem;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.9);
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0, 0, 0, 0.4);
             padding: 0.7rem 1rem;
             border-radius: 8px;
             display: inline-block;
         }}
 
-        /* Radio buttons centered */
-        div[data-testid="stHorizontalBlock"] {{
-            display: flex !important;
-            justify-content: center !important;
-            align-items: center !important;
-            width: 100% !important;
-        }}
-        label[data-baseweb="radio"] > div {{
-            font-size: 1.15rem !important;
-            font-weight: 700 !important;
-            color: #000 !important;
-            text-shadow: 1px 1px 3px rgba(255,255,255,0.5);
-        }}
-
-        /* Pulse animation */
+        /* Animated Pulse */
         @keyframes pulse {{
             0% {{ transform: scale(1); opacity: 1; }}
             50% {{ transform: scale(1.05); opacity: 0.9; }}
@@ -130,8 +132,8 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---- Report Type Selection ----
-st.markdown('<p class="subtitle">Select Report Type:</p>', unsafe_allow_html=True)
+# ---- Centered Radio ----
+st.markdown('<p class="subtitle" style="font-weight:700;">Select Report Type:</p>', unsafe_allow_html=True)
 centered_radio = st.columns([1, 2, 1])[1]
 with centered_radio:
     report_type = st.radio("", ["UE & SI", "DE"], horizontal=True, label_visibility="collapsed")
@@ -156,7 +158,6 @@ if report_type == "UE & SI":
             f.write(ppt_file.read())
 
         if st.button("🚀 Run Processing"):
-            # --- Custom Processing Box ---
             st.markdown(
                 """
                 <div style="
@@ -164,7 +165,7 @@ if report_type == "UE & SI":
                     font-size:1.4rem;
                     font-weight:800;
                     color:#005bb5;
-                    background:rgba(255,255,255,0.85);
+                    background:rgba(255,255,255,0.9);
                     padding:1.2rem 1.6rem;
                     border-radius:14px;
                     box-shadow:0 4px 12px rgba(0,0,0,0.25);
@@ -182,7 +183,6 @@ if report_type == "UE & SI":
                 if hasattr(Main_Code_Task, 'main'):
                     Main_Code_Task.main()
 
-                # Success box
                 st.markdown(
                     """
                     <div style="
@@ -190,7 +190,7 @@ if report_type == "UE & SI":
                         font-size:1.3rem;
                         font-weight:800;
                         color:#0a7d00;
-                        background:rgba(240,255,240,0.9);
+                        background:rgba(240,255,240,0.95);
                         padding:1rem 1.5rem;
                         border-radius:12px;
                         box-shadow:0 3px 10px rgba(0,0,0,0.2);
@@ -202,7 +202,6 @@ if report_type == "UE & SI":
                     unsafe_allow_html=True
                 )
 
-                # Clear Download Button
                 with open(pptx_path, "rb") as f:
                     st.download_button(
                         label="⬇️ Click Here to Download Updated UE & SI PowerPoint Report",
@@ -248,7 +247,6 @@ else:
                 f.write(file_obj.read())
 
         if st.button("🚀 Run Processing"):
-            # --- Custom Processing Box ---
             st.markdown(
                 """
                 <div style="
@@ -256,7 +254,7 @@ else:
                     font-size:1.4rem;
                     font-weight:800;
                     color:#005bb5;
-                    background:rgba(255,255,255,0.85);
+                    background:rgba(255,255,255,0.9);
                     padding:1.2rem 1.6rem;
                     border-radius:14px;
                     box-shadow:0 4px 12px rgba(0,0,0,0.25);
@@ -287,7 +285,6 @@ else:
                 if hasattr(Delta_code_5G, 'main'):
                     Delta_code_5G.main()
 
-                # Success box
                 st.markdown(
                     """
                     <div style="
@@ -295,7 +292,7 @@ else:
                         font-size:1.3rem;
                         font-weight:800;
                         color:#0a7d00;
-                        background:rgba(240,255,240,0.9);
+                        background:rgba(240,255,240,0.95);
                         padding:1rem 1.5rem;
                         border-radius:12px;
                         box-shadow:0 3px 10px rgba(0,0,0,0.2);
@@ -307,7 +304,6 @@ else:
                     unsafe_allow_html=True
                 )
 
-                # Clear Download Button
                 with open(pptx_path, "rb") as f:
                     st.download_button(
                         label="⬇️ Click Here to Download Updated DE PowerPoint Report",
