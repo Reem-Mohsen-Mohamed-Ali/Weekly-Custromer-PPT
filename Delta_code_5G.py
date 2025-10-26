@@ -16,7 +16,7 @@ from pptx import Presentation
 from pptx.chart.data import CategoryChartData
 from datetime import datetime, timedelta
 
-def main_with_paths(excel_path_arg, pptx_path_arg):
+def main_with_paths_DE(excel_path_2G_3G_4G_Delta, excel_path_2G_3G_4G_Ports, excel_path_5G, pptx_path_arg):
     global excel_path, pptx_file,shhet_5g,excel_path_2
     excel_path = excel_path_2G_3G_4G_Delta
     shhet_5g=excel_path_5G
@@ -1398,4 +1398,5 @@ if __name__ == "__main__":
 ######################### Port Saaed###########################################
 
 ###############################################################################
+
 
