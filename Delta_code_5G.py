@@ -752,7 +752,7 @@ def main():
 #############################################################
 
 ##### Get 5G UPPER Data From Excel #################
-    excel_path_2=r"C:\Users\mreem\Documents\tools\daily\PS Query 8.xlsx"
+
     sheet_name = 'Merge1'
     df = pd.read_excel(excel_path_2, sheet_name=sheet_name)
 
@@ -1396,6 +1396,7 @@ if __name__ == "__main__":
 ######################### Port Saaed###########################################
 
 ###############################################################################
+
 
 
 
