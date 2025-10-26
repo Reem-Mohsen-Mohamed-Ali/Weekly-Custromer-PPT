@@ -103,8 +103,7 @@ def merge_series(existing_dates, existing_values, new_dates, new_values):
 
 ###Upper
 def main():
-    excel_path=r"C:\Users\mreem\Documents\tools\daily\DE_Query 8.xlsx"
-    pptx_file = r"C:\Users\mreem\Documents\tools\daily\Delta Overview KPIs.pptx"  # Replace with your PowerPoint file path
+
     
     prs = Presentation(pptx_file)
     # Update date on the first and twelfth slides
@@ -196,7 +195,6 @@ def main():
     
     ############################ 5G KPIs ###################
     ##### Get 5G UPPER Data From Excel #################
-    shhet_5g=r"C:\Users\mreem\Documents\tools\daily\WeeklySlides_Govs-nsn2gnpo-2025_10_24-18_03_56__215 1.xlsx"
     
     sheet_name = '5G001_Govs'
     df = pd.read_excel(shhet_5g, sheet_name=sheet_name)
@@ -838,7 +836,7 @@ def main():
     
     ############################ 5G KPIs ###################
     ##### Get 5G UPPER Data From Excel #################
-    shhet_5g=r"C:\Users\mreem\Documents\tools\daily\WeeklySlides_Govs-nsn2gnpo-2025_10_24-18_03_56__215 1.xlsx"
+
     
     sheet_name = '5G001_Govs'
     df = pd.read_excel(shhet_5g, sheet_name=sheet_name)
@@ -1398,5 +1396,6 @@ if __name__ == "__main__":
 ######################### Port Saaed###########################################
 
 ###############################################################################
+
 
 
