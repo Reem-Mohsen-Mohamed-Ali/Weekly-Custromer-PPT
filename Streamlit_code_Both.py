@@ -277,8 +277,7 @@ else:
 
         # ✅ DE Run Processing button should be inside this block
         if st.button("🚀 Run Processing", key="run_de"):
-    # --- Custom Processing Box ---
-    st.markdown(
+            st.markdown(
         """
         <div style="
             text-align:center;
@@ -357,6 +356,7 @@ else:
     except Exception as e:
         st.error(f"❌ Processing failed: {e}")
         st.exception(e)
+
 
 
 
