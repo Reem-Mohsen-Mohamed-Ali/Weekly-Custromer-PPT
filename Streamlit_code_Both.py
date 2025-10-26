@@ -10,7 +10,7 @@ import tempfile
 import os
 import base64
 import Main_Code_Task
-import Delta_code_5G  # backend file
+import Delta_code_5G  # your backend Python file
 
 # ---- Page Config ----
 st.set_page_config(page_title="Network KPI PowerPoint Updater", page_icon="📊", layout="centered")
@@ -19,28 +19,53 @@ st.set_page_config(page_title="Network KPI PowerPoint Updater", page_icon="📊"
 def add_bg_from_local(image_file):
     with open(image_file, "rb") as f:
         base64_image = base64.b64encode(f.read()).decode()
+
     st.markdown(
         f"""
         <style>
+        /* --- Background Animation --- */
+        @keyframes moveBackground {{
+            0% {{ background-position: center top; }}
+            50% {{ background-position: center bottom; }}
+            100% {{ background-position: center top; }}
+        }}
+
         .stApp {{
             background-image: url("data:image/png;base64,{base64_image}");
             background-size: cover;
             background-repeat: no-repeat;
-            background-position: center;
             background-attachment: fixed;
+            animation: moveBackground 15s ease-in-out infinite;
         }}
+
+        /* --- Main Layout Centering --- */
+        .main {{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }}
+
+        /* --- Title --- */
         h1 {{
             text-align: center;
             font-weight: 900;
             color: white;
+            margin-bottom: 0.5rem;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
         }}
+
+        /* --- Subtitle --- */
         .subtitle {{
             text-align: center;
             font-size: 1.2rem;
-            color: black;
+            color: white;
             margin-bottom: 1rem;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
         }}
+
+        /* --- Buttons --- */
         div.stButton > button:first-child {{
             background-color: #005bb5;
             color: white;
@@ -57,6 +82,13 @@ def add_bg_from_local(image_file):
             background-color: #0073e6;
             transform: scale(1.03);
         }}
+
+        /* --- Upload Areas --- */
+        section[data-testid="stFileUploader"] {{
+            text-align: center;
+        }}
+
+        /* --- Info Text --- */
         .upload-info {{
             color: #fff;
             font-weight: bold;
@@ -67,26 +99,45 @@ def add_bg_from_local(image_file):
             border-radius: 8px;
             display: inline-block;
         }}
+
+        /* --- Radio Buttons Center --- */
+        .center-radio {{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            margin-top: 0.3rem;
+            margin-bottom: 1.5rem;
+        }}
+
+        label[data-baseweb="radio"] > div {{
+            font-size: 1.05rem !important;
+            font-weight: 600 !important;
+            color: #000 !important;
+        }}
         </style>
         """,
-        unsafe_allow_html=True,
+        unsafe_allow_html=True
     )
 
+# ---- Add the Background ----
 add_bg_from_local("Snap6.png")
 
-# ---- Header ----
+# ---- App Header ----
 st.markdown(
-    '<h1>📊 Network KPI Weekly Slides Generator</h1>',
+    '<h1 style="color:white; text-align:center; font-weight:900; text-shadow:1px 1px 3px rgba(0,0,0,0.6);">📊 Network KPI Weekly Slides Generator</h1>',
     unsafe_allow_html=True
 )
+
+# ---- Subtitle ----
 st.markdown(
     '<p class="subtitle">Select your report type (<b>UE & SI</b> or <b>DE</b>), upload the required Excel and PowerPoint files,<br>then click <b>Run Processing</b> to automatically update your PowerPoint report.</p>',
     unsafe_allow_html=True
 )
 
-# ---- Centered Radio Buttons ----
+# ---- Centered (slightly right-aligned) Radio Buttons ----
 st.markdown('<div style="text-align:center;"><b>Select Report Type:</b></div>', unsafe_allow_html=True)
-colr1, colr2, colr3 = st.columns([1, 2, 1])
+colr1, colr2, colr3 = st.columns([0.8, 2, 1.2])  # shifted slightly to right
 with colr2:
     report_type = st.radio("", ["UE & SI", "DE"], horizontal=True, label_visibility="collapsed")
 
@@ -95,17 +146,24 @@ with colr2:
 # ============================================================
 if report_type == "UE & SI":
     st.header("📁 UE & SI Input Files")
-    excel_file = st.file_uploader("📈 Upload Excel file (.xlsx)", type=["xlsx"])
+
+    excel_file = st.file_uploader("📈 Upload Excel file (ORG Agreed KPIs) (.xlsx)", type=["xlsx"])
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
 
     if not (excel_file and ppt_file):
-        st.markdown('<p class="upload-info">⚠️ Please upload both an Excel file and a PowerPoint file to continue.</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<p class="upload-info">⚠️ Please upload both an Excel file and a PowerPoint file to continue.</p>',
+            unsafe_allow_html=True
+        )
     else:
         temp_dir = tempfile.mkdtemp()
         excel_path = os.path.join(temp_dir, excel_file.name)
         pptx_path = os.path.join(temp_dir, ppt_file.name)
-        with open(excel_path, "wb") as f: f.write(excel_file.read())
-        with open(pptx_path, "wb") as f: f.write(ppt_file.read())
+
+        with open(excel_path, "wb") as f:
+            f.write(excel_file.read())
+        with open(pptx_path, "wb") as f:
+            f.write(ppt_file.read())
 
         if st.button("🚀 Run Processing"):
             with st.spinner("Processing UE & SI Report — please wait..."):
@@ -121,48 +179,67 @@ if report_type == "UE & SI":
                     st.exception(e)
 
 # ============================================================
-# ---- DE SECTION (4 inputs + side-by-side layout) ----
+# ---- DE SECTION (4 input files + side by side layout) ----
 # ============================================================
 else:
     st.header("📁 DE Input Files")
 
-    # --- Two uploaders side by side ---
+    # --- Side-by-side uploaders for Delta and Port Said ---
     col1, col2 = st.columns(2)
     with col1:
-        excel_file_delta = st.file_uploader("📶 2G/3G/4G Delta Excel (.xlsx)", type=["xlsx"], key="delta")
+        excel_file_2G_3G_4G_Delta = st.file_uploader(
+            "📶 Upload 2G / 3G / 4G Delta Excel file (.xlsx)", type=["xlsx"], key="delta"
+        )
     with col2:
-        excel_file_portsaid = st.file_uploader("🏗️ 2G/3G/4G PortSaid Excel (.xlsx)", type=["xlsx"], key="portsaid")
+        excel_file_2G_3G_4G_Ports = st.file_uploader(
+            "🏗️ Upload 2G / 3G / 4G Port Said Excel file (.xlsx)", type=["xlsx"], key="ports"
+        )
 
-    # --- Below that: 5G + PPT ---
-    excel_file_5G = st.file_uploader("📡 Upload 5G Excel (.xlsx)", type=["xlsx"], key="5g")
+    # --- Below: 5G Data + PPT uploaders ---
+    excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"], key="5g")
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"], key="ppt")
 
-    if not (excel_file_delta and excel_file_portsaid and excel_file_5G and ppt_file):
-        st.markdown('<p class="upload-info">⚠️ Please upload all 4 files (Delta, PortSaid, 5G, PPT) to continue.</p>', unsafe_allow_html=True)
+    if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
+        st.markdown(
+            '<p class="upload-info">⚠️ Please upload all required files: Delta, Port Said, 5G Data, and PowerPoint.</p>',
+            unsafe_allow_html=True
+        )
     else:
         temp_dir = tempfile.mkdtemp()
-        delta_path = os.path.join(temp_dir, excel_file_delta.name)
-        portsaid_path = os.path.join(temp_dir, excel_file_portsaid.name)
-        fiveg_path = os.path.join(temp_dir, excel_file_5G.name)
+        excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
+        excel_path_2G_3G_4G_Ports = os.path.join(temp_dir, excel_file_2G_3G_4G_Ports.name)
+        excel_path_5G = os.path.join(temp_dir, excel_file_5G.name)
         pptx_path = os.path.join(temp_dir, ppt_file.name)
 
         for file_obj, path in [
-            (excel_file_delta, delta_path),
-            (excel_file_portsaid, portsaid_path),
-            (excel_file_5G, fiveg_path),
+            (excel_file_2G_3G_4G_Delta, excel_path_2G_3G_4G_Delta),
+            (excel_file_2G_3G_4G_Ports, excel_path_2G_3G_4G_Ports),
+            (excel_file_5G, excel_path_5G),
             (ppt_file, pptx_path),
         ]:
-            with open(path, "wb") as f: f.write(file_obj.read())
+            with open(path, "wb") as f:
+                f.write(file_obj.read())
 
         if st.button("🚀 Run Processing"):
             with st.spinner("Processing DE Report — please wait..."):
                 try:
                     if hasattr(Delta_code_5G, 'main_with_paths_DE'):
-                        Delta_code_5G.main_with_paths_DE(delta_path, portsaid_path, fiveg_path, pptx_path)
-                    elif hasattr(Delta_code_5G, 'main_with_paths'):
-                        Delta_code_5G.main_with_paths(delta_path, fiveg_path, pptx_path)
+                        Delta_code_5G.main_with_paths_DE(
+                            excel_path_2G_3G_4G_Delta,
+                            excel_path_2G_3G_4G_Ports,
+                            excel_path_5G,
+                            pptx_path
+                        )
+                    else:
+                        Delta_code_5G.main_with_paths(
+                            excel_path_2G_3G_4G_Delta,
+                            excel_path_5G,
+                            pptx_path
+                        )
+
                     if hasattr(Delta_code_5G, 'main'):
                         Delta_code_5G.main()
+
                     st.success("🎉 DE PowerPoint updated successfully!")
                     with open(pptx_path, "rb") as f:
                         st.download_button("⬇️ Download Updated PowerPoint", f, file_name="Updated_DE_Report.pptx")
