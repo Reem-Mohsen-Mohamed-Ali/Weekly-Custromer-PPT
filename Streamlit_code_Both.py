@@ -175,19 +175,32 @@ if report_type == "UE & SI":
                     st.exception(e)
 
 # ============================================================
-# ---- DE SECTION ----
+# ---- DE SECTION (Updated for 4 Input Files + Side by Side Layout) ----
 # ============================================================
 else:
     st.header("📁 DE Input Files")
 
-    excel_file_2G_3G_4G_Delta = st.file_uploader("📶 Upload 2G / 3G / 4G Delta Excel file (.xlsx)", type=["xlsx"])
-    excel_file_2G_3G_4G_Ports = st.file_uploader("🏗️ Upload 2G / 3G / 4G Port Said Excel file (.xlsx)", type=["xlsx"])
-    excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"])
-    ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
+    # --- Side-by-side uploaders for Delta and Port Said ---
+    col1, col2 = st.columns(2)
 
+    with col1:
+        excel_file_2G_3G_4G_Delta = st.file_uploader(
+            "📶 Upload 2G / 3G / 4G Delta Excel file (.xlsx)", type=["xlsx"], key="delta"
+        )
+    with col2:
+        excel_file_2G_3G_4G_Ports = st.file_uploader(
+            "🏗️ Upload 2G / 3G / 4G Port Said Excel file (.xlsx)", type=["xlsx"], key="ports"
+        )
+
+    # --- Below those, single uploaders for 5G + PPT ---
+    excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"], key="5g")
+    ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"], key="ppt")
+
+    # --- Warning message if any missing ---
     if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
-        st.markdown('<p class="upload-info">⚠️ Please upload both an Excel files and a PowerPoint file to continue.</p>', unsafe_allow_html=True)
+        st.markdown('<p class="upload-info">⚠️ Please upload both an Excel file and a PowerPoint file to continue.</p>', unsafe_allow_html=True)
     else:
+        # --- Save all uploaded files temporarily ---
         temp_dir = tempfile.mkdtemp()
         excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
         excel_path_2G_3G_4G_Ports = os.path.join(temp_dir, excel_file_2G_3G_4G_Ports.name)
@@ -203,6 +216,7 @@ else:
             with open(path, "wb") as f:
                 f.write(file_obj.read())
 
+        # --- Run button ---
         if st.button("🚀 Run Processing"):
             with st.spinner("Processing DE Report — please wait..."):
                 try:
@@ -229,6 +243,8 @@ else:
                 except Exception as e:
                     st.error(f"❌ Processing failed: {e}")
                     st.exception(e)
+
+
 
 
 
