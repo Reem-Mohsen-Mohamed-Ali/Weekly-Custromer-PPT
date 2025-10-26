@@ -93,21 +93,21 @@ def add_bg_from_local(image_file):
             display: inline-block;
         }}
 
-        /* --- Center Radio Buttons --- */
-        .center-radio {{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2.5rem;
-            margin-top: 0.3rem;
-            margin-bottom: 1.5rem;
+        /* --- Perfectly Centered Radio Buttons --- */
+        div[data-testid="stHorizontalBlock"] {{
+            display: flex !important;
+            justify-content: center !important;
+            align-items: center !important;
+            text-align: center !important;
+            margin: 0 auto !important;
+            width: 100% !important;
         }}
 
-        /* --- Radio Text Styling --- */
         label[data-baseweb="radio"] > div {{
-            font-size: 1.05rem !important;
-            font-weight: 600 !important;
+            font-size: 1.15rem !important;
+            font-weight: 700 !important;
             color: #000 !important;
+            text-shadow: 1px 1px 3px rgba(255,255,255,0.5);
         }}
         </style>
         """,
@@ -130,15 +130,16 @@ st.markdown(
 )
 
 # ---- Centered Select Report Type ----
-st.markdown('<p class="subtitle">Select Report Type:</p>', unsafe_allow_html=True)
-st.markdown('<div class="center-radio">', unsafe_allow_html=True)
-report_type = st.radio(
-    "",
-    ["UE & SI", "DE"],
-    horizontal=True,
-    label_visibility="collapsed"
-)
-st.markdown('</div>', unsafe_allow_html=True)
+st.markdown('<p class="subtitle" style="font-weight:700;">Select Report Type:</p>', unsafe_allow_html=True)
+
+center_container = st.container()
+with center_container:
+    report_type = st.radio(
+        "",
+        ["UE & SI", "DE"],
+        horizontal=True,
+        label_visibility="collapsed",
+    )
 
 # ============================================================
 # ---- UE & SI SECTION ----
@@ -175,14 +176,13 @@ if report_type == "UE & SI":
                     st.exception(e)
 
 # ============================================================
-# ---- DE SECTION (Updated for 4 Input Files + Side by Side Layout) ----
+# ---- DE SECTION (4 Input Files + Side-by-Side Layout) ----
 # ============================================================
 else:
     st.header("📁 DE Input Files")
 
     # --- Side-by-side uploaders for Delta and Port Said ---
     col1, col2 = st.columns(2)
-
     with col1:
         excel_file_2G_3G_4G_Delta = st.file_uploader(
             "📶 Upload 2G / 3G / 4G Delta Excel file (.xlsx)", type=["xlsx"], key="delta"
@@ -198,7 +198,7 @@ else:
 
     # --- Warning message if any missing ---
     if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
-        st.markdown('<p class="upload-info">⚠️ Please upload both an Excel file and a PowerPoint file to continue.</p>', unsafe_allow_html=True)
+        st.markdown('<p class="upload-info">⚠️ Please upload all required files (2G/3G/4G Delta, Port Said, 5G, and PPT) to continue.</p>', unsafe_allow_html=True)
     else:
         # --- Save all uploaded files temporarily ---
         temp_dir = tempfile.mkdtemp()
@@ -243,8 +243,3 @@ else:
                 except Exception as e:
                     st.error(f"❌ Processing failed: {e}")
                     st.exception(e)
-
-
-
-
-
