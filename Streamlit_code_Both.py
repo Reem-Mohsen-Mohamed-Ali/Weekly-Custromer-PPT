@@ -238,9 +238,9 @@ if report_type == "UE & SI":
                 st.error(f"❌ Processing failed: {e}")
                 st.exception(e)
 
-#============================================================
+# ============================================================
 # ---- DE SECTION ----
-#============================================================
+# ============================================================
 else:
     st.header("📁 DE Input Files")
 
@@ -257,9 +257,14 @@ else:
     excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"], key="5g")
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"], key="ppt")
 
+    # --- Check for all required uploads ---
     if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
-        st.markdown('<p class="upload-info">⚠️ Please upload all required files (2G/3G/4G Delta, Port Said, 5G, and PPT) to continue.</p>', unsafe_allow_html=True)
+        st.markdown(
+            '<p class="upload-info">⚠️ Please upload all required files (2G/3G/4G Delta, Port Said, 5G, and PPT) to continue.</p>',
+            unsafe_allow_html=True,
+        )
     else:
+        # --- Save uploaded files ---
         temp_dir = tempfile.mkdtemp()
         excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
         excel_path_2G_3G_4G_Ports = os.path.join(temp_dir, excel_file_2G_3G_4G_Ports.name)
@@ -275,87 +280,86 @@ else:
             with open(path, "wb") as f:
                 f.write(file_obj.read())
 
-        # ✅ DE Run Processing button should be inside this block
+        # ✅ Only show Run Processing button after all files exist
         if st.button("🚀 Run Processing", key="run_de"):
             st.markdown(
-        """
-        <div style="
-            text-align:center;
-            font-size:1.4rem;
-            font-weight:800;
-            color:#005bb5;
-            background:rgba(255,255,255,0.85);
-            padding:1.2rem 1.6rem;
-            border-radius:14px;
-            box-shadow:0 4px 12px rgba(0,0,0,0.25);
-            margin-top:1rem;
-            animation:pulse 1.6s infinite;
-        ">
-            🚀 Processing DE Report — Please Wait...
-        </div>
-        <style>
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.05); opacity: 0.9; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-    try:
-        if hasattr(Delta_code_5G, 'main_with_paths_DE'):
-            Delta_code_5G.main_with_paths_DE(
-                excel_path_2G_3G_4G_Delta,
-                excel_path_2G_3G_4G_Ports,
-                excel_path_5G,
-                pptx_path
-            )
-        else:
-            Delta_code_5G.main_with_paths(
-                excel_path_2G_3G_4G_Delta,
-                excel_path_5G,
-                pptx_path
+                """
+                <div style="
+                    text-align:center;
+                    font-size:1.4rem;
+                    font-weight:800;
+                    color:#005bb5;
+                    background:rgba(255,255,255,0.85);
+                    padding:1.2rem 1.6rem;
+                    border-radius:14px;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+                    margin-top:1rem;
+                    animation:pulse 1.6s infinite;
+                ">
+                    🚀 Processing DE Report — Please Wait...
+                </div>
+                <style>
+                @keyframes pulse {
+                    0% { transform: scale(1); opacity: 1; }
+                    50% { transform: scale(1.05); opacity: 0.9; }
+                    100% { transform: scale(1); opacity: 1; }
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
             )
 
-        if hasattr(Delta_code_5G, 'main'):
-            Delta_code_5G.main()
+            try:
+                if hasattr(Delta_code_5G, 'main_with_paths_DE'):
+                    Delta_code_5G.main_with_paths_DE(
+                        excel_path_2G_3G_4G_Delta,
+                        excel_path_2G_3G_4G_Ports,
+                        excel_path_5G,
+                        pptx_path
+                    )
+                else:
+                    Delta_code_5G.main_with_paths(
+                        excel_path_2G_3G_4G_Delta,
+                        excel_path_5G,
+                        pptx_path
+                    )
 
-        # --- Beautiful Success Message ---
-        st.markdown(
-            """
-            <div style="
-                text-align:center;
-                font-size:1.3rem;
-                font-weight:800;
-                color:#0a7d00;
-                background:rgba(240,255,240,0.9);
-                padding:1rem 1.5rem;
-                border-radius:12px;
-                box-shadow:0 3px 10px rgba(0,0,0,0.2);
-                margin-top:1.5rem;
-            ">
-                🎉 DE PowerPoint Updated Successfully!
-            </div>
-            """,
-            unsafe_allow_html=True
-        )
+                if hasattr(Delta_code_5G, 'main'):
+                    Delta_code_5G.main()
 
-        # --- Clear Download Button ---
-        with open(pptx_path, "rb") as f:
-            st.download_button(
-                label="⬇️ Click Here to Download Updated DE PowerPoint Report",
-                data=f,
-                file_name="Updated_DE_Report.pptx",
-                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
-                help="Download the newly generated DE report",
-                use_container_width=True,
-            )
+                st.markdown(
+                    """
+                    <div style="
+                        text-align:center;
+                        font-size:1.3rem;
+                        font-weight:800;
+                        color:#0a7d00;
+                        background:rgba(240,255,240,0.9);
+                        padding:1rem 1.5rem;
+                        border-radius:12px;
+                        box-shadow:0 3px 10px rgba(0,0,0,0.2);
+                        margin-top:1.5rem;
+                    ">
+                        🎉 DE PowerPoint Updated Successfully!
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
 
-    except Exception as e:
-        st.error(f"❌ Processing failed: {e}")
-        st.exception(e)
+                with open(pptx_path, "rb") as f:
+                    st.download_button(
+                        label="⬇️ Click Here to Download Updated DE PowerPoint Report",
+                        data=f,
+                        file_name="Updated_DE_Report.pptx",
+                        mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                        help="Download the newly generated DE report",
+                        use_container_width=True,
+                    )
+
+            except Exception as e:
+                st.error(f"❌ Processing failed: {e}")
+                st.exception(e)
+
 
 
 
