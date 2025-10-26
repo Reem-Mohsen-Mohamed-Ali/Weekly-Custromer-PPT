@@ -180,23 +180,42 @@ if report_type == "UE & SI":
 else:
     st.header("📁 DE Input Files")
 
-    excel_file_2G_3G_4G = st.file_uploader("📶 Upload 2G / 3G / 4G Excel file (.xlsx)", type=["xlsx"])
-    excel_file_5G = st.file_uploader("📡 Upload 5G Excel file (.xlsx)", type=["xlsx"])
+    excel_file_2G_3G_4G_Delta = st.file_uploader("📶 Upload 2G / 3G / 4G Delta Excel file (.xlsx)", type=["xlsx"])
+    excel_file_2G_3G_4G_Ports = st.file_uploader("🏗️ Upload 2G / 3G / 4G Port Said Excel file (.xlsx)", type=["xlsx"])
+    excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"])
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
 
-    if not (excel_file_2G_3G_4G and excel_file_5G and ppt_file):
+    if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
         st.markdown(
-            '<p class="upload-info">⚠️ Please upload both Excel files (2G/3G/4G and 5G) and the PowerPoint file.</p>',
+            """
+            <p style="
+                color: #ffcc00;
+                font-weight: 700;
+                font-size: 1.2rem;
+                text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
+                background: rgba(0, 0, 0, 0.55);
+                padding: 0.9rem 1.2rem;
+                border-radius: 10px;
+                display: inline-block;">
+                ⚠️ Please upload <b>all four files:</b><br>
+                1️⃣ 2G/3G/4G Delta Excel<br>
+                2️⃣ 2G/3G/4G Port Said Excel<br>
+                3️⃣ 5G Data Excel<br>
+                4️⃣ PowerPoint file
+            </p>
+            """,
             unsafe_allow_html=True,
         )
     else:
         temp_dir = tempfile.mkdtemp()
-        excel_path_2G_3G_4G = os.path.join(temp_dir, excel_file_2G_3G_4G.name)
+        excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
+        excel_path_2G_3G_4G_Ports = os.path.join(temp_dir, excel_file_2G_3G_4G_Ports.name)
         excel_path_5G = os.path.join(temp_dir, excel_file_5G.name)
         pptx_path = os.path.join(temp_dir, ppt_file.name)
 
         for file_obj, path in [
-            (excel_file_2G_3G_4G, excel_path_2G_3G_4G),
+            (excel_file_2G_3G_4G_Delta, excel_path_2G_3G_4G_Delta),
+            (excel_file_2G_3G_4G_Ports, excel_path_2G_3G_4G_Ports),
             (excel_file_5G, excel_path_5G),
             (ppt_file, pptx_path),
         ]:
@@ -207,14 +226,26 @@ else:
             with st.spinner("Processing DE Report — please wait..."):
                 try:
                     if hasattr(Delta_code_5G, 'main_with_paths_DE'):
-                        Delta_code_5G.main_with_paths_DE(excel_path_2G_3G_4G, excel_path_5G, pptx_path)
+                        Delta_code_5G.main_with_paths_DE(
+                            excel_path_2G_3G_4G_Delta,
+                            excel_path_2G_3G_4G_Ports,
+                            excel_path_5G,
+                            pptx_path
+                        )
                     else:
-                        Delta_code_5G.main_with_paths(excel_path_2G_3G_4G, pptx_path)
+                        Delta_code_5G.main_with_paths(
+                            excel_path_2G_3G_4G_Delta,
+                            excel_path_5G,
+                            pptx_path
+                        )
+
                     if hasattr(Delta_code_5G, 'main'):
                         Delta_code_5G.main()
+
                     st.success("🎉 DE PowerPoint updated successfully!")
                     with open(pptx_path, "rb") as f:
                         st.download_button("⬇️ Download Updated PowerPoint", f, file_name="Updated_DE_Report.pptx")
                 except Exception as e:
                     st.error(f"❌ Processing failed: {e}")
                     st.exception(e)
+
