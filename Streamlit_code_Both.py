@@ -38,7 +38,7 @@ def add_bg_from_local(image_file):
             animation: moveBackground 15s ease-in-out infinite;
         }}
 
-        /* --- Main Layout Centering --- */
+        /* --- Center Layout --- */
         .main {{
             display: flex;
             flex-direction: column;
@@ -56,13 +56,14 @@ def add_bg_from_local(image_file):
             text-shadow: 1px 1px 3px rgba(0,0,0,0.6);
         }}
 
-        /* --- Subtitle --- */
+        /* --- Subtitle (black and bold) --- */
         .subtitle {{
             text-align: center;
             font-size: 1.2rem;
-            color: white;
+            color: black;
+            font-weight: 700;
             margin-bottom: 1rem;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+            text-shadow: 0.5px 0.5px 1px rgba(255,255,255,0.6);
         }}
 
         /* --- Buttons --- */
@@ -100,20 +101,13 @@ def add_bg_from_local(image_file):
             display: inline-block;
         }}
 
-        /* --- Radio Buttons Center --- */
+        /* --- Center Radio Buttons --- */
         .center-radio {{
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2.5rem;
             margin-top: 0.3rem;
             margin-bottom: 1.5rem;
-        }}
-
-        label[data-baseweb="radio"] > div {{
-            font-size: 1.05rem !important;
-            font-weight: 600 !important;
-            color: #000 !important;
         }}
         </style>
         """,
@@ -125,7 +119,7 @@ add_bg_from_local("Snap6.png")
 
 # ---- App Header ----
 st.markdown(
-    '<h1 style="color:white; text-align:center; font-weight:900; text-shadow:1px 1px 3px rgba(0,0,0,0.6);">📊 Network KPI Weekly Slides Generator</h1>',
+    '<h1 style="text-align:center;">📊 Network KPI Weekly Slides Generator</h1>',
     unsafe_allow_html=True
 )
 
@@ -135,11 +129,16 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# ---- Centered (slightly right-aligned) Radio Buttons ----
+# ---- Centered Radio Buttons ----
 st.markdown('<div style="text-align:center;"><b>Select Report Type:</b></div>', unsafe_allow_html=True)
-colr1, colr2, colr3 = st.columns([0.8, 2, 1.2])  # shifted slightly to right
+colr1, colr2, colr3 = st.columns([1, 2, 1])
 with colr2:
-    report_type = st.radio("", ["UE & SI", "DE"], horizontal=True, label_visibility="collapsed")
+    report_type = st.radio(
+        "",
+        ["UE & SI", "DE"],
+        horizontal=True,
+        label_visibility="collapsed"
+    )
 
 # ============================================================
 # ---- UE & SI SECTION ----
@@ -151,10 +150,7 @@ if report_type == "UE & SI":
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
 
     if not (excel_file and ppt_file):
-        st.markdown(
-            '<p class="upload-info">⚠️ Please upload both an Excel file and a PowerPoint file to continue.</p>',
-            unsafe_allow_html=True
-        )
+        st.markdown('<p class="upload-info">⚠️ Please upload both an Excel file and a PowerPoint file to continue.</p>', unsafe_allow_html=True)
     else:
         temp_dir = tempfile.mkdtemp()
         excel_path = os.path.join(temp_dir, excel_file.name)
@@ -179,13 +175,13 @@ if report_type == "UE & SI":
                     st.exception(e)
 
 # ============================================================
-# ---- DE SECTION (4 input files + side by side layout) ----
+# ---- DE SECTION ----
 # ============================================================
 else:
     st.header("📁 DE Input Files")
 
-    # --- Side-by-side uploaders for Delta and Port Said ---
     col1, col2 = st.columns(2)
+
     with col1:
         excel_file_2G_3G_4G_Delta = st.file_uploader(
             "📶 Upload 2G / 3G / 4G Delta Excel file (.xlsx)", type=["xlsx"], key="delta"
@@ -195,15 +191,11 @@ else:
             "🏗️ Upload 2G / 3G / 4G Port Said Excel file (.xlsx)", type=["xlsx"], key="ports"
         )
 
-    # --- Below: 5G Data + PPT uploaders ---
     excel_file_5G = st.file_uploader("📡 Upload 5G Data Excel file (.xlsx)", type=["xlsx"], key="5g")
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"], key="ppt")
 
     if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
-        st.markdown(
-            '<p class="upload-info">⚠️ Please upload all required files: Delta, Port Said, 5G Data, and PowerPoint.</p>',
-            unsafe_allow_html=True
-        )
+        st.markdown('<p class="upload-info">⚠️ Please upload all Excel and PowerPoint files to continue.</p>', unsafe_allow_html=True)
     else:
         temp_dir = tempfile.mkdtemp()
         excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
