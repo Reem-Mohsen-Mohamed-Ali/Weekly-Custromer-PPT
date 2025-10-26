@@ -238,7 +238,7 @@ if report_type == "UE & SI":
                 st.error(f"❌ Processing failed: {e}")
                 st.exception(e)
 
-# ============================================================
+============================================================
 # ---- DE SECTION ----
 # ============================================================
 else:
@@ -275,7 +275,8 @@ else:
             with open(path, "wb") as f:
                 f.write(file_obj.read())
 
-if st.button("🚀 Run Processing", key="run_de"):
+        # ✅ DE Run Processing button should be inside this block
+        if st.button("🚀 Run Processing", key="run_de"):
     # --- Custom Processing Box ---
     st.markdown(
         """
@@ -356,6 +357,7 @@ if st.button("🚀 Run Processing", key="run_de"):
     except Exception as e:
         st.error(f"❌ Processing failed: {e}")
         st.exception(e)
+
 
 
 
