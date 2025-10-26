@@ -229,29 +229,85 @@ else:
             with open(path, "wb") as f:
                 f.write(file_obj.read())
 
-        if st.button("🚀 Run Processing"):
-            with st.spinner("Processing DE Report — please wait..."):
-                try:
-                    if hasattr(Delta_code_5G, 'main_with_paths_DE'):
-                        Delta_code_5G.main_with_paths_DE(
-                            excel_path_2G_3G_4G_Delta,
-                            excel_path_2G_3G_4G_Ports,
-                            excel_path_5G,
-                            pptx_path
-                        )
-                    else:
-                        Delta_code_5G.main_with_paths(
-                            excel_path_2G_3G_4G_Delta,
-                            excel_path_5G,
-                            pptx_path
-                        )
+if st.button("🚀 Run Processing"):
+    # --- Custom Processing Box ---
+    st.markdown(
+        """
+        <div style="
+            text-align:center;
+            font-size:1.4rem;
+            font-weight:800;
+            color:#005bb5;
+            background:rgba(255,255,255,0.85);
+            padding:1.2rem 1.6rem;
+            border-radius:14px;
+            box-shadow:0 4px 12px rgba(0,0,0,0.25);
+            margin-top:1rem;
+            animation:pulse 1.6s infinite;
+        ">
+            🚀 Processing DE Report — Please Wait...
+        </div>
+        <style>
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.05); opacity: 0.9; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 
-                    if hasattr(Delta_code_5G, 'main'):
-                        Delta_code_5G.main()
+    try:
+        if hasattr(Delta_code_5G, 'main_with_paths_DE'):
+            Delta_code_5G.main_with_paths_DE(
+                excel_path_2G_3G_4G_Delta,
+                excel_path_2G_3G_4G_Ports,
+                excel_path_5G,
+                pptx_path
+            )
+        else:
+            Delta_code_5G.main_with_paths(
+                excel_path_2G_3G_4G_Delta,
+                excel_path_5G,
+                pptx_path
+            )
 
-                    st.success("🎉 DE PowerPoint updated successfully!")
-                    with open(pptx_path, "rb") as f:
-                        st.download_button("⬇️ Download Updated PowerPoint", f, file_name="Updated_DE_Report.pptx")
-                except Exception as e:
-                    st.error(f"❌ Processing failed: {e}")
-                    st.exception(e)
+        if hasattr(Delta_code_5G, 'main'):
+            Delta_code_5G.main()
+
+        # --- Beautiful Success Message ---
+        st.markdown(
+            """
+            <div style="
+                text-align:center;
+                font-size:1.3rem;
+                font-weight:800;
+                color:#0a7d00;
+                background:rgba(240,255,240,0.9);
+                padding:1rem 1.5rem;
+                border-radius:12px;
+                box-shadow:0 3px 10px rgba(0,0,0,0.2);
+                margin-top:1.5rem;
+            ">
+                🎉 DE PowerPoint Updated Successfully!
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+
+        # --- Clear Download Button ---
+        with open(pptx_path, "rb") as f:
+            st.download_button(
+                label="⬇️ Click Here to Download Updated DE PowerPoint Report",
+                data=f,
+                file_name="Updated_DE_Report.pptx",
+                mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                help="Download the newly generated DE report",
+                use_container_width=True,
+            )
+
+    except Exception as e:
+        st.error(f"❌ Processing failed: {e}")
+        st.exception(e))
+
