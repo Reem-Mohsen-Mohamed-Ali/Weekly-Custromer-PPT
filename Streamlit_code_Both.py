@@ -238,9 +238,9 @@ if report_type == "UE & SI":
                 st.error(f"❌ Processing failed: {e}")
                 st.exception(e)
 
-============================================================
+#============================================================
 # ---- DE SECTION ----
-# ============================================================
+#============================================================
 else:
     st.header("📁 DE Input Files")
 
@@ -357,6 +357,7 @@ else:
     except Exception as e:
         st.error(f"❌ Processing failed: {e}")
         st.exception(e)
+
 
 
 
