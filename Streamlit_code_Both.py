@@ -180,17 +180,63 @@ if report_type == "UE & SI":
             f.write(ppt_file.read())
 
         if st.button("🚀 Run Processing"):
-            with st.spinner("Processing UE & SI Report — please wait..."):
-                try:
-                    Main_Code_Task.main_with_paths(excel_path, pptx_path)
-                    if hasattr(Main_Code_Task, 'main'):
-                        Main_Code_Task.main()
-                    st.success("🎉 UE & SI PowerPoint updated successfully!")
-                    with open(pptx_path, "rb") as f:
-                        st.download_button("⬇️ Download Updated PowerPoint", f, file_name="Updated_UE_SI_Report.pptx")
-                except Exception as e:
-                    st.error(f"❌ Processing failed: {e}")
-                    st.exception(e)
+            st.markdown(
+                """
+                <div style="
+                    text-align:center;
+                    font-size:1.4rem;
+                    font-weight:800;
+                    color:#005bb5;
+                    background:rgba(255,255,255,0.9);
+                    padding:1.2rem 1.6rem;
+                    border-radius:14px;
+                    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+                    margin-top:1rem;
+                    animation:pulse 1.6s infinite;
+                ">
+                    🚀 Processing UE & SI Report — Please Wait...
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+
+            try:
+                Main_Code_Task.main_with_paths(excel_path, pptx_path)
+                if hasattr(Main_Code_Task, 'main'):
+                    Main_Code_Task.main()
+
+                st.markdown(
+                    """
+                    <div style="
+                        text-align:center;
+                        font-size:1.3rem;
+                        font-weight:800;
+                        color:#0a7d00;
+                        background:rgba(240,255,240,0.95);
+                        padding:1rem 1.5rem;
+                        border-radius:12px;
+                        box-shadow:0 3px 10px rgba(0,0,0,0.2);
+                        margin-top:1.5rem;
+                    ">
+                        🎉 UE & SI PowerPoint Updated Successfully!
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+                with open(pptx_path, "rb") as f:
+                    st.download_button(
+                        label="⬇️ Click Here to Download Updated UE & SI PowerPoint Report",
+                        data=f,
+                        file_name="Updated_UE_SI_Report.pptx",
+                        mime="application/vnd.openxmlformats-officedocument.presentationml.presentation",
+                        help="Download the newly generated UE & SI report",
+                        use_container_width=True,
+                    )
+
+            except Exception as e:
+                st.error(f"❌ Processing failed: {e}")
+                st.exception(e)
 
 # ============================================================
 # ---- DE SECTION ----
@@ -310,5 +356,6 @@ if st.button("🚀 Run Processing"):
     except Exception as e:
         st.error(f"❌ Processing failed: {e}")
         st.exception(e)
+
 
 
