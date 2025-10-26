@@ -146,7 +146,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 if report_type == "UE & SI":
     st.header("📁 UE & SI Input Files")
 
-    excel_file = st.file_uploader("📈 Upload Excel file (.xlsx)", type=["xlsx"])
+    excel_file = st.file_uploader("📈 Upload Excel file "ORG Agreed KPIs" (.xlsx)", type=["xlsx"])
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
 
     if not (excel_file and ppt_file):
@@ -186,26 +186,7 @@ else:
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
 
     if not (excel_file_2G_3G_4G_Delta and excel_file_2G_3G_4G_Ports and excel_file_5G and ppt_file):
-        st.markdown(
-            """
-            <p style="
-                color: #ffcc00;
-                font-weight: 700;
-                font-size: 1.2rem;
-                text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
-                background: rgba(0, 0, 0, 0.55);
-                padding: 0.9rem 1.2rem;
-                border-radius: 10px;
-                display: inline-block;">
-                ⚠️ Please upload <b>all four files:</b><br>
-                1️⃣ 2G/3G/4G Delta Excel<br>
-                2️⃣ 2G/3G/4G Port Said Excel<br>
-                3️⃣ 5G Data Excel<br>
-                4️⃣ PowerPoint file
-            </p>
-            """,
-            unsafe_allow_html=True,
-        )
+        st.markdown('<p class="upload-info">⚠️ Please upload both an Excel files and a PowerPoint file to continue.</p>', unsafe_allow_html=True)
     else:
         temp_dir = tempfile.mkdtemp()
         excel_path_2G_3G_4G_Delta = os.path.join(temp_dir, excel_file_2G_3G_4G_Delta.name)
@@ -248,4 +229,5 @@ else:
                 except Exception as e:
                     st.error(f"❌ Processing failed: {e}")
                     st.exception(e)
+
 
