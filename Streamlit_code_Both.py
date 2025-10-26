@@ -146,7 +146,7 @@ st.markdown('</div>', unsafe_allow_html=True)
 if report_type == "UE & SI":
     st.header("📁 UE & SI Input Files")
 
-    excel_file = st.file_uploader("📈 Upload Excel file "ORG Agreed KPIs" (.xlsx)", type=["xlsx"])
+    excel_file = st.file_uploader("📈 Upload Excel file (ORG Agreed KPIs) (.xlsx)", type=["xlsx"])
     ppt_file = st.file_uploader("📊 Upload PowerPoint file (.pptx)", type=["pptx"])
 
     if not (excel_file and ppt_file):
@@ -229,5 +229,6 @@ else:
                 except Exception as e:
                     st.error(f"❌ Processing failed: {e}")
                     st.exception(e)
+
 
 
