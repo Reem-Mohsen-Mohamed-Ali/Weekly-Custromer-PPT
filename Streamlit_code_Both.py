@@ -179,7 +179,7 @@ if report_type == "UE & SI":
         with open(pptx_path, "wb") as f:
             f.write(ppt_file.read())
 
-        if st.button("🚀 Run Processing"):
+        if st.button("🚀 Run Processing",Key="run_UE_SI"):
             st.markdown(
                 """
                 <div style="
@@ -275,7 +275,7 @@ else:
             with open(path, "wb") as f:
                 f.write(file_obj.read())
 
-if st.button("🚀 Run Processing"):
+if st.button("🚀 Run Processing",key=run_Delta"):
     # --- Custom Processing Box ---
     st.markdown(
         """
@@ -356,6 +356,7 @@ if st.button("🚀 Run Processing"):
     except Exception as e:
         st.error(f"❌ Processing failed: {e}")
         st.exception(e)
+
 
 
 
